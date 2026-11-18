@@ -1,0 +1,305 @@
+:root {
+    /* PRIMITIVOS */
+    --sp-4: 4px;
+    --sp-8: 8px;
+    --sp-10: 10px;
+    --sp-12: 12px;
+    --sp-16: 16px;
+    --sp-24: 24px;
+    --rad-8: 8px;
+
+    --white: #ffffff;
+    --black: #000000;
+    --gray-50: #fafbfc;
+    --gray-100: #f4f6f8;
+    --gray-200: #e2e6ea;
+    --gray-300: #cdd3d9;
+    --gray-400: #9aa3ac;
+    --gray-500: #6c757d;
+    --gray-600: #525b64;
+    --gray-700: #3e464e;
+    --gray-800: #2b3238;
+    --gray-900: #1a1d20;
+
+    --orange-50: #fff4ee;
+    --orange-100: #ffe4d5;
+    --orange-200: #ffc8ac;
+    --orange-300: #ffa57c;
+    --orange-400: #ff8655;
+    --orange-500: #ff6b35;
+    --orange-600: #d94b1c;
+    --orange-700: #ad3515;
+    --orange-800: #852a16;
+    --orange-900: #652216;
+
+    --green-700: #15803d;
+    --red-700: #b91c1c;
+    --amber-700: #b45309;
+
+    /* SEMÁNTICOS */
+    --color-background: var(--gray-50);
+    --color-surface: var(--white);
+    --color-on-surface: var(--gray-900);
+    --color-on-surface-secondary: var(--gray-600);
+    --color-border: var(--gray-300);
+    --color-primary: var(--orange-700);
+    --color-primary-hover: var(--orange-800);
+    --color-on-primary: var(--white);
+    --color-success: var(--green-700);
+    --color-error: var(--red-700);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    line-height: 1.5;
+}
+
+/* Barra superior*/
+.navbar {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--sp-16) var(--sp-24);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand a {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: var(--sp-24);
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--color-on-surface-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.nav-links a:hover,
+.nav-links a.activo {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* Contenedor principal */
+.contenedor {
+    max-width: 960px;
+    margin: var(--sp-24) auto;
+    padding: 0 var(--sp-24);
+}
+
+/* Cabecera "MyGaraje" + botón "Añadir moto" a la derecha */
+.cabecera-garaje {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--sp-24);
+}
+
+.cabecera-garaje h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+/* Grid de tarjetas de motos */
+.grid-motos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--sp-24);
+}
+
+.tarjeta-moto {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--rad-8);
+    padding: var(--sp-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-12);
+}
+
+/* Bloque gris superior para foto de la moto */
+.tarjeta-img-placeholder {
+    width: 100%;
+    height: 130px;
+    background-color: var(--gray-200);
+    border-radius: var(--sp-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.tarjeta-info h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-on-surface);
+}
+
+.tarjeta-subtitulo {
+    font-size: 0.85rem;
+    color: var(--color-on-surface-secondary);
+    margin-top: var(--sp-4);
+}
+
+/* Badges de estado */
+.badge-estado {
+    display: inline-block;
+    padding: 2px var(--sp-8);
+    border-radius: var(--sp-4);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: var(--sp-8);
+}
+
+.badge-ok {
+    background-color: #dcfce7;
+    color: var(--color-success);
+}
+
+.badge-aviso {
+    background-color: #fef3c7;
+    color: var(--amber-700);
+}
+
+.badge-urgente {
+    background-color: #fee2e2;
+    color: var(--color-error);
+}
+
+/* Botones */
+.btn-primario,
+.btn-secundario {
+    display: inline-block;
+    padding: var(--sp-10) var(--sp-16);
+    border-radius: var(--rad-8);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-primario {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.btn-primario:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.btn-ancho {
+    width: 100%;
+}
+
+.btn-secundario {
+    background-color: var(--gray-200);
+    color: var(--color-on-surface);
+    margin-bottom: var(--sp-16);
+}
+
+.btn-secundario:hover {
+    background-color: var(--gray-300);
+}
+
+/* Bloque inferior de Alertas */
+.bloque-alertas {
+    margin-top: 2rem;
+}
+
+.bloque-alertas h2 {
+    font-size: 1.2rem;
+    margin-bottom: var(--sp-12);
+}
+
+.lista-alertas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-8);
+}
+
+.item-alerta {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--sp-4);
+    padding: var(--sp-12) var(--sp-16);
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Vista de detalle y páginas en construcción */
+.panel-detalle,
+.en-construccion {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--rad-8);
+    padding: var(--sp-24);
+}
+
+.lista-mantenimientos {
+    margin-top: var(--sp-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-12);
+}
+
+.item-mantenimiento {
+    border: 1px solid var(--color-border);
+    border-radius: var(--rad-8);
+    padding: var(--sp-16);
+    background-color: var(--gray-100);
+}
+
+.oculto {
+    display: none;
+}
+
+/* Adaptación al Mockup Móvil (< 600px) */
+@media (max-width: 600px) {
+    .navbar {
+        padding: var(--sp-12) var(--sp-16);
+    }
+
+    .nav-links {
+        gap: var(--sp-12);
+        font-size: 0.85rem;
+    }
+
+    .contenedor {
+        padding: 0 var(--sp-16);
+        margin: var(--sp-16) auto;
+    }
+
+    .cabecera-garaje {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--sp-12);
+    }
+
+    .cabecera-garaje .btn-primario {
+        width: 100%;
+    }
+}
