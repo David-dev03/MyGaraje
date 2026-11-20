@@ -372,12 +372,21 @@ body {
 /* Adaptación al Mockup Móvil (< 600px) */
 @media (max-width: 600px) {
     .navbar {
-        padding: var(--sp-12) var(--sp-16);
+        background-color: var(--color-surface);
+        border-bottom: 1px solid var(--color-border);
+        padding: var(--sp-16) var(--sp-24);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--sp-12);
     }
 
     .nav-links {
-        gap: var(--sp-12);
-        font-size: 0.85rem;
+        list-style: none;
+        display: flex;
+        gap: var(--sp-24);
+        flex-wrap: wrap;
     }
 
     .contenedor {

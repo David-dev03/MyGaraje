@@ -221,5 +221,27 @@ export const mantenimientos = [
         coste: 140,
         estado: 'Completado',
         notas: 'Montado Pirelli Diablo Rosso III.'
+    },
+    {
+        id: 111,
+        motoId: 8,
+        titulo: 'Revisión de reglaje de válvulas y aceite',
+        fecha: '2026-12-05',
+        km: 16000,
+        modalidad: 'Taller',
+        coste: 145,
+        estado: 'Pendiente',
+        notas: 'Toca revisión de los 16.000 km según manual.'
+    },
+    {
+        id: 112,
+        motoId: 10,
+        titulo: 'Cambio urgente de pastillas y líquido de frenos',
+        fecha: '2026-11-22',
+        km: 22000,
+        modalidad: 'Taller',
+        coste: 95,
+        estado: 'Pendiente',
+        notas: 'Desgaste al límite en disco delantero.'
     }
 ];
