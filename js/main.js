@@ -6,14 +6,34 @@ const vistaDetalle = document.querySelector('#vista-detalle');
 const contenedorMotos = document.querySelector('#contenedor-motos');
 const contenedorAlertas = document.querySelector('#contenedor-alertas');
 
+function buscarMotoPorId(idBuscado) {
+    for (let i = 0; i < motos.length; i++) {
+        if (motos[i].id === idBuscado) {
+            return motos[i];
+        }
+    }
+    return null;
+}
+
+function buscarMantenimientosDeMoto(idBuscado) {
+    const resultado = [];
+
+    for (let i = 0; i < mantenimientos.length; i++) {
+        if (mantenimientos[i].motoId === idBuscado) {
+            resultado.push(mantenimientos[i]);
+        }
+    }
+
+    return resultado;
+}
+
 function mostrarDetalle(motoId) {
-    const motoSeleccionada = motos.find((moto) => moto.id === motoId);
-    if (!motoSeleccionada) return;
+    const motoSeleccionada = buscarMotoPorId(motoId);
+    if (!motoSeleccionada) {
+        return;
+    }
 
-    const mantenimientosAsociados = mantenimientos.filter(
-        (item) => item.motoId === motoId
-    );
-
+    const mantenimientosAsociados = buscarMantenimientosDeMoto(motoId);
     renderDetalleMoto(motoSeleccionada, mantenimientosAsociados, vistaDetalle);
 
     vistaListado.classList.add('oculto');
@@ -25,25 +45,32 @@ function volverAListado() {
     vistaListado.classList.remove('oculto');
 }
 
+function manejarClicMotos(event) {
+    const boton = event.target.closest('.btn-ver-moto');
+    if (!boton) {
+        return;
+    }
+
+    const motoId = Number(boton.dataset.id);
+    mostrarDetalle(motoId);
+}
+
+function manejarClicDetalle(event) {
+    if (event.target.id === 'btn-volver') {
+        volverAListado();
+    }
+}
+
 function iniciarApp() {
-    if (!contenedorMotos || !contenedorAlertas) return;
+    if (!contenedorMotos || !contenedorAlertas) {
+        return;
+    }
 
     renderListadoMotos(motos, contenedorMotos);
     renderAlertas(mantenimientos, motos, contenedorAlertas);
 
-    contenedorMotos.addEventListener('click', (event) => {
-        const boton = event.target.closest('.btn-ver-moto');
-        if (!boton) return;
-
-        const motoId = Number(boton.dataset.id);
-        mostrarDetalle(motoId);
-    });
-
-    vistaDetalle.addEventListener('click', (event) => {
-        if (event.target.id === 'btn-volver') {
-            volverAListado();
-        }
-    });
+    contenedorMotos.addEventListener('click', manejarClicMotos);
+    vistaDetalle.addEventListener('click', manejarClicDetalle);
 }
 
 iniciarApp();

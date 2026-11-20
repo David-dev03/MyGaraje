@@ -62,7 +62,7 @@ body {
     line-height: 1.5;
 }
 
-/* Barra superior*/
+/* Barra superior */
 .navbar {
     background-color: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
@@ -105,17 +105,26 @@ body {
     padding: 0 var(--sp-24);
 }
 
-/* Cabecera "MyGaraje" + botón "Añadir moto" a la derecha */
-.cabecera-garaje {
-    display: flex;
-    justify-content: space-between;
+/* Título a la izquierda, botón a la derecha */
+.layout-garaje {
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    margin-bottom: var(--sp-24);
+    row-gap: var(--sp-24);
 }
 
-.cabecera-garaje h1 {
+.titulo-garaje {
     font-size: 1.6rem;
     font-weight: 700;
+}
+
+.btn-anadir-moto {
+    justify-self: end;
+}
+
+.layout-garaje .grid-motos,
+.layout-garaje .bloque-alertas {
+    grid-column: 1 / -1;
 }
 
 /* Grid de tarjetas de motos */
@@ -248,6 +257,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: var(--sp-12);
 }
 
 /* Vista de detalle y páginas en construcción */
@@ -257,24 +267,6 @@ body {
     border: 1px solid var(--color-border);
     border-radius: var(--rad-8);
     padding: var(--sp-24);
-}
-
-.lista-mantenimientos {
-    margin-top: var(--sp-16);
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-12);
-}
-
-.item-mantenimiento {
-    border: 1px solid var(--color-border);
-    border-radius: var(--rad-8);
-    padding: var(--sp-16);
-    background-color: var(--gray-100);
-}
-
-.oculto {
-    display: none;
 }
 
 .detalle-cabecera {
@@ -306,6 +298,77 @@ body {
     align-items: flex-start;
 }
 
+/* Historial y tarjetas de mantenimiento ordenadas */
+.lista-mantenimientos {
+    margin-top: var(--sp-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-12);
+}
+
+.item-mantenimiento {
+    border: 1px solid var(--color-border);
+    border-radius: var(--rad-8);
+    padding: var(--sp-16);
+    background-color: var(--gray-100);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-12);
+}
+
+.mantenimiento-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-12);
+    flex-wrap: wrap;
+}
+
+.mantenimiento-cabecera h3 {
+    font-size: 1.05rem;
+    color: var(--color-on-surface);
+}
+
+.mantenimiento-cabecera .badge-estado {
+    margin-top: 0;
+}
+
+.mantenimiento-datos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-12);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--sp-4);
+    padding: var(--sp-12);
+}
+
+.dato-caja {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dato-etiqueta {
+    font-size: 0.75rem;
+    color: var(--color-on-surface-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.dato-valor {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-on-surface);
+}
+
+.mantenimiento-notas {
+    font-size: 0.9rem;
+    color: var(--color-on-surface-secondary);
+    padding-top: var(--sp-8);
+    border-top: 1px solid var(--color-border);
+}
+
 /* Adaptación al Mockup Móvil (< 600px) */
 @media (max-width: 600px) {
     .navbar {
@@ -322,23 +385,47 @@ body {
         margin: var(--sp-16) auto;
     }
 
-    .cabecera-garaje {
+    /* El botón Añadir moto al final */
+    .layout-garaje {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: var(--sp-12);
+        align-items: stretch;
+        gap: var(--sp-16);
     }
 
-    .cabecera-garaje .btn-primario {
+    .titulo-garaje {
+        order: 1;
+    }
+
+    .layout-garaje .grid-motos {
+        order: 2;
+    }
+
+    .btn-anadir-moto {
+        order: 3;
         width: 100%;
     }
+
+    .layout-garaje .bloque-alertas {
+        order: 4;
+        margin-top: var(--sp-8);
+    }
+
+    .detalle-cabecera {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .detalle-img-placeholder {
+        width: 100%;
+        height: 180px;
+    }
+
+    .mantenimiento-datos {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.detalle-cabecera {
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.detalle-img-placeholder {
-    width: 100%;
-    height: 180px;
+.oculto {
+    display: none !important;
 }
