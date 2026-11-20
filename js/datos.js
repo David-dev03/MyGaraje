@@ -53,6 +53,61 @@ export const motos = [
         aceiteRecomendado: 'Castrol Power1 Racing 10W-40',
         seguimiento: 'Cálculo estimado',
         estado: 'Alerta urgente'
+    },
+    {
+        id: 6,
+        marca: 'Suzuki',
+        modelo: 'GSX-S125',
+        anio: 2022,
+        matricula: '6012 LVB',
+        kmActuales: 11300,
+        aceiteRecomendado: 'Ecstar R9000 10W-40',
+        seguimiento: 'Cálculo estimado',
+        estado: 'Al día'
+    },
+    {
+        id: 7,
+        marca: 'Zontes',
+        modelo: 'U1-125',
+        anio: 2023,
+        matricula: '8834 MGT',
+        kmActuales: 7600,
+        aceiteRecomendado: 'Motul 5100 10W-40',
+        seguimiento: 'Sensor OBD Bluetooth',
+        estado: 'Al día'
+    },
+    {
+        id: 8,
+        marca: 'Benelli',
+        modelo: 'BN 125',
+        anio: 2021,
+        matricula: '2190 LCK',
+        kmActuales: 15400,
+        aceiteRecomendado: 'Castrol Power1 10W-50',
+        seguimiento: 'Cálculo estimado',
+        estado: 'Revisión próxima'
+    },
+    {
+        id: 9,
+        marca: 'Kawasaki',
+        modelo: 'Z125',
+        anio: 2023,
+        matricula: '5471 MJD',
+        kmActuales: 6200,
+        aceiteRecomendado: 'Elf Moto 4 Tech 10W-50',
+        seguimiento: 'Sensor OBD Bluetooth',
+        estado: 'Al día'
+    },
+    {
+        id: 10,
+        marca: 'Yamaha',
+        modelo: 'YZF-R125',
+        anio: 2020,
+        matricula: '3908 KWR',
+        kmActuales: 21900,
+        aceiteRecomendado: 'Yamalube 10W-40 Full Synthetic',
+        seguimiento: 'Cálculo estimado',
+        estado: 'Alerta urgente'
     }
 ];
 

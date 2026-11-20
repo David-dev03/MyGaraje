@@ -38,6 +38,7 @@ function mostrarDetalle(motoId) {
 
     vistaListado.classList.add('oculto');
     vistaDetalle.classList.remove('oculto');
+    window.scrollTo(0, 0);
 }
 
 function volverAListado() {
