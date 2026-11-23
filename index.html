@@ -15,17 +15,17 @@
         </div>
         <nav aria-label="Navegación principal">
             <ul class="nav-links">
-                <li><a href="index.html" class="activo">Garaje</a></li>
-                <li><a href="anadir-moto.html">Añadir moto</a></li>
-                <li><a href="talleres.html">Mapa</a></li>
-                <li><a href="guia-tareas.html">Guía</a></li>
-                <li><a href="login.html">Acceso</a></li>
+                <li><a href="#vista-listado" data-vista="vista-listado" class="activo">Garaje</a></li>
+                <li><a href="#vista-registro" data-vista="vista-registro">Registro</a></li>
+                <li><a href="#vista-usuarios" data-vista="vista-usuarios">Usuarios</a></li>
+                <li><a href="#vista-contacto" data-vista="vista-contacto">Contacto</a></li>
+                <li><a href="#vista-mensajes" data-vista="vista-mensajes">Mensajes</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="contenedor">
-        <section id="vista-listado" class="layout-garaje">
+        <section id="vista-listado" class="vista layout-garaje">
             <h1 class="titulo-garaje">MyGaraje</h1>
             <a href="anadir-moto.html" class="btn-primario btn-anadir-moto">Añadir moto</a>
 
@@ -37,7 +37,19 @@
             </section>
         </section>
 
-        <section id="vista-detalle" class="oculto"></section>
+        <section id="vista-detalle" class="vista oculto"></section>
+        <section id="vista-registro" class="vista oculto">
+            <h1>Registro de usuario</h1>
+        </section>
+        <section id="vista-usuarios" class="vista oculto">
+            <h1>Usuarios</h1>
+        </section>
+        <section id="vista-contacto" class="vista oculto">
+            <h1>Contacto</h1>
+        </section>
+        <section id="vista-mensajes" class="vista oculto">
+            <h1>Mensajes enviados</h1>
+        </section>
     </main>
 
     <script type="module" src="js/main.js"></script>

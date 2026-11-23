@@ -108,6 +108,17 @@ export const motos = [
         aceiteRecomendado: 'Yamalube 10W-40 Full Synthetic',
         seguimiento: 'Cálculo estimado',
         estado: 'Alerta urgente'
+    },
+    {
+        id: 11,
+        marca: 'Ducati',
+        modelo: 'Monster 125',
+        anio: 2024,
+        matricula: '9920 MKD',
+        kmActuales: 54365,
+        aceiteRecomendado: 'Shell Advance 15W-50',
+        seguimiento: 'Cálculo estimado',
+        estado: 'Al día'
     }
 ];
 
