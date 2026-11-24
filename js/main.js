@@ -1,5 +1,5 @@
 import { motos, mantenimientos } from './datos.js';
-import { renderListadoMotos, renderAlertas, renderDetalleMoto, renderUsuarios } from './ui.js';
+import { renderListadoMotos, renderAlertas, renderDetalleMoto, renderUsuarios, renderMensajes } from './ui.js';
 import { obtenerTodos, obtenerPorId, crear, actualizar, borrar } from './almacen.js';
 import {
     validarObligatorio,
@@ -7,7 +7,8 @@ import {
     validarEmail,
     validarPassword,
     validarRepetirPassword,
-    validarFechaNacimiento
+    validarFechaNacimiento,
+    validarTelefono
 } from './validacion.js';
 
 const vistaDetalle = document.querySelector('#vista-detalle');
@@ -29,6 +30,16 @@ const regPassword = document.querySelector('#reg-password');
 const regRepetir = document.querySelector('#reg-repetir');
 const regFecha = document.querySelector('#reg-fecha');
 const regCondiciones = document.querySelector('#reg-condiciones');
+
+const formContacto = document.querySelector('#form-contacto');
+const contenedorMensajes = document.querySelector('#contenedor-mensajes');
+const conNombre = document.querySelector('#con-nombre');
+const conCorreo = document.querySelector('#con-correo');
+const conTelefono = document.querySelector('#con-telefono');
+const conLlamar = document.querySelector('#con-llamar');
+const conMotivo = document.querySelector('#con-motivo');
+const conMensaje = document.querySelector('#con-mensaje');
+const contadorMensaje = document.querySelector('#contador-mensaje');
 
 let idUsuarioEditando = null;
 
@@ -321,6 +332,166 @@ function manejarClicUsuarios(event) {
     }
 }
 
+function guardarCookie(nombreCookie, valor, dias) {
+    const fecha = new Date();
+    fecha.setTime(fecha.getTime() + dias * 24 * 60 * 60 * 1000);
+    document.cookie = nombreCookie + '=' + encodeURIComponent(valor) + '; expires=' + fecha.toUTCString() + '; path=/';
+}
+
+function leerCookie(nombreCookie) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const trozo = cookies[i].trim();
+        if (trozo.indexOf(nombreCookie + '=') === 0) {
+            return decodeURIComponent(trozo.substring(nombreCookie.length + 1));
+        }
+    }
+    return '';
+}
+
+function cargarContactoDesdeCookie() {
+    const nombreGuardado = leerCookie('contactoNombre');
+    const correoGuardado = leerCookie('contactoCorreo');
+
+    if (nombreGuardado !== '') {
+        conNombre.value = nombreGuardado;
+    }
+    if (correoGuardado !== '') {
+        conCorreo.value = correoGuardado;
+    }
+}
+
+function actualizarContadorMensaje() {
+    const max = conMensaje.maxLength > 0 ? conMensaje.maxLength : 300;
+    contadorMensaje.textContent = conMensaje.value.length + ' / ' + max;
+}
+
+function obtenerErrorContacto(campo) {
+    if (campo.id === 'con-llamar') {
+        return null;
+    }
+
+    if (campo.required) {
+        const errorObligatorio = validarObligatorio(campo.value);
+        if (errorObligatorio) {
+            return errorObligatorio;
+        }
+    }
+
+    if (campo.id === 'con-nombre' || campo.id === 'con-mensaje') {
+        const min = campo.minLength > 0 ? campo.minLength : null;
+        const max = campo.maxLength > 0 ? campo.maxLength : null;
+        return validarLongitud(campo.value, min, max);
+    }
+
+    if (campo.id === 'con-correo') {
+        return validarEmail(campo.value);
+    }
+
+    if (campo.id === 'con-telefono') {
+        return validarTelefono(campo.value, conLlamar.checked);
+    }
+
+    return null;
+}
+
+function validarCampoContacto(campo) {
+    const error = obtenerErrorContacto(campo);
+    mostrarErrorCampo(campo, error);
+    return error === null;
+}
+
+function limpiarFormularioContacto() {
+    formContacto.reset();
+    actualizarContadorMensaje();
+
+    const campos = [conNombre, conCorreo, conTelefono, conLlamar, conMotivo, conMensaje];
+    for (let i = 0; i < campos.length; i++) {
+        delete campos[i].dataset.tocado;
+        mostrarErrorCampo(campos[i], null);
+    }
+}
+
+function manejarBlurContacto(event) {
+    const campo = event.target;
+    if (!campo.name) {
+        return;
+    }
+    campo.dataset.tocado = 'true';
+    validarCampoContacto(campo);
+}
+
+function manejarInputContacto(event) {
+    const campo = event.target;
+    if (!campo.name) {
+        return;
+    }
+
+    if (campo.id === 'con-mensaje') {
+        actualizarContadorMensaje();
+    }
+
+    if (campo.dataset.tocado === 'true') {
+        validarCampoContacto(campo);
+    }
+
+    if (campo.id === 'con-llamar') {
+        conTelefono.dataset.tocado = 'true';
+        validarCampoContacto(conTelefono);
+    }
+}
+
+function manejarSubmitContacto(event) {
+    event.preventDefault();
+
+    const campos = [conNombre, conCorreo, conTelefono, conLlamar, conMotivo, conMensaje];
+    let primerCampoConError = null;
+
+    for (let i = 0; i < campos.length; i++) {
+        campos[i].dataset.tocado = 'true';
+        const esValido = validarCampoContacto(campos[i]);
+        if (!esValido && !primerCampoConError) {
+            primerCampoConError = campos[i];
+        }
+    }
+
+    if (primerCampoConError) {
+        primerCampoConError.focus();
+        return;
+    }
+
+    const datosMensaje = {
+        nombre: conNombre.value.trim(),
+        correo: conCorreo.value.trim(),
+        telefono: conTelefono.value.trim(),
+        prefieroLlamada: Boolean(conLlamar.checked),
+        motivo: conMotivo.value,
+        mensaje: conMensaje.value.trim(),
+        fecha: new Date().toISOString().slice(0, 10)
+    };
+
+    crear('mensajes', datosMensaje);
+    guardarCookie('contactoNombre', datosMensaje.nombre, 7);
+    guardarCookie('contactoCorreo', datosMensaje.correo, 7);
+
+    limpiarFormularioContacto();
+    renderMensajes(obtenerTodos('mensajes'), contenedorMensajes);
+    mostrarVista('vista-mensajes');
+}
+
+function manejarClicMensajes(event) {
+    const botonBorrar = event.target.closest('.btn-borrar-mensaje');
+    if (!botonBorrar) {
+        return;
+    }
+
+    const id = Number(botonBorrar.dataset.id);
+    if (confirm('¿Seguro que quieres borrar este mensaje?')) {
+        borrar('mensajes', id);
+        renderMensajes(obtenerTodos('mensajes'), contenedorMensajes);
+    }
+}
+
 function iniciarApp() {
     function cargarDatosIniciales() {
         if (obtenerTodos('motos').length === 0) {
@@ -350,6 +521,9 @@ function iniciarApp() {
     document.addEventListener('click', manejarClicNav);
 
     pintarUsuarios();
+    renderMensajes(obtenerTodos('mensajes'), contenedorMensajes);
+    cargarContactoDesdeCookie();
+    actualizarContadorMensaje();
 
     formRegistro.addEventListener('blur', manejarBlurRegistro, true);
     formRegistro.addEventListener('input', manejarInputRegistro);
@@ -357,6 +531,12 @@ function iniciarApp() {
     formRegistro.addEventListener('submit', manejarSubmitRegistro);
     btnCancelarEdicion.addEventListener('click', limpiarFormularioRegistro);
     contenedorUsuarios.addEventListener('click', manejarClicUsuarios);
+
+    formContacto.addEventListener('blur', manejarBlurContacto, true);
+    formContacto.addEventListener('input', manejarInputContacto);
+    formContacto.addEventListener('change', manejarInputContacto);
+    formContacto.addEventListener('submit', manejarSubmitContacto);
+    contenedorMensajes.addEventListener('click', manejarClicMensajes);
 }
 
 iniciarApp();

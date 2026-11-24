@@ -455,6 +455,19 @@ body {
     margin-bottom: 0;
 }
 
+.pie-textarea {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--sp-12);
+}
+
+.contador-caracteres {
+    font-size: 0.8rem;
+    color: var(--color-on-surface-secondary);
+    white-space: nowrap;
+}
+
 /* Adaptación al Mockup Móvil (< 600px) */
 @media (max-width: 600px) {
     .navbar {

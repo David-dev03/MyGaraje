@@ -165,3 +165,38 @@ export function renderUsuarios(listaUsuarios, contenedor, idPerfilActivo) {
 
   contenedor.innerHTML = html;
 }
+
+export function renderMensajes(listaMensajes, contenedor) {
+  if (listaMensajes.length === 0) {
+    contenedor.innerHTML = '<p>Todavía no has enviado ningún mensaje.</p>';
+    return;
+  }
+
+  let html = '';
+  for (let i = 0; i < listaMensajes.length; i++) {
+    const m = listaMensajes[i];
+    let textoTelefono = 'No indicado';
+    if (m.telefono !== '') {
+      textoTelefono = m.telefono;
+    }
+
+    let etiquetaLlamada = '';
+    if (m.prefieroLlamada) {
+      etiquetaLlamada = '<span class="badge-estado badge-aviso">Prefiere llamada</span>';
+    }
+
+    html += `
+      <article class="item-mantenimiento">
+        <div class="mantenimiento-cabecera">
+          <h3>${m.motivo} ${etiquetaLlamada}</h3>
+          <button type="button" class="btn-secundario btn-borrar-mensaje" data-id="${m.id}">Borrar</button>
+        </div>
+        <p><strong>De:</strong> ${m.nombre} (${m.correo})</p>
+        <p><strong>Teléfono:</strong> ${textoTelefono} · <strong>Fecha:</strong> ${m.fecha}</p>
+        <p class="mantenimiento-notas">${m.mensaje}</p>
+      </article>
+    `;
+  }
+
+  contenedor.innerHTML = html;
+}

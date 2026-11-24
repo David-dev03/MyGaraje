@@ -136,6 +136,63 @@
             </div>
             <div class="panel-detalle">
                 <h1>Contacto</h1>
+                <form id="form-contacto" class="formulario" novalidate>
+                    <div class="campo-form">
+                        <label for="con-nombre">Nombre</label>
+                        <input type="text" id="con-nombre" name="nombre" required minlength="2" maxlength="50"
+                            aria-describedby="error-con-nombre">
+                        <p id="error-con-nombre" class="error-campo"></p>
+                    </div>
+
+                    <div class="campo-form">
+                        <label for="con-correo">Correo electrónico</label>
+                        <input type="email" id="con-correo" name="correo" required maxlength="100"
+                            aria-describedby="error-con-correo">
+                        <p id="error-con-correo" class="error-campo"></p>
+                    </div>
+
+                    <div class="campo-form">
+                        <label for="con-telefono">Teléfono (opcional)</label>
+                        <input type="tel" id="con-telefono" name="telefono" maxlength="15"
+                            aria-describedby="error-con-telefono">
+                        <p id="error-con-telefono" class="error-campo"></p>
+                    </div>
+
+                    <div class="campo-form campo-check">
+                        <label for="con-llamar">
+                            <input type="checkbox" id="con-llamar" name="prefieroLlamada"
+                                aria-describedby="error-con-llamar">
+                            Prefiero que me llaméis
+                        </label>
+                        <p id="error-con-llamar" class="error-campo"></p>
+                    </div>
+
+                    <div class="campo-form">
+                        <label for="con-motivo">Motivo</label>
+                        <select id="con-motivo" name="motivo" required aria-describedby="error-con-motivo">
+                            <option value="">Elige un motivo...</option>
+                            <option value="Duda sobre mantenimiento">Duda sobre mantenimiento</option>
+                            <option value="Proponer un taller">Proponer un taller cercano</option>
+                            <option value="Problema con sensor OBD">Problema con sensor OBD</option>
+                            <option value="Sugerencia para MyGaraje">Sugerencia para MyGaraje</option>
+                        </select>
+                        <p id="error-con-motivo" class="error-campo"></p>
+                    </div>
+
+                    <div class="campo-form">
+                        <label for="con-mensaje">Mensaje</label>
+                        <textarea id="con-mensaje" name="mensaje" rows="4" required minlength="10" maxlength="300"
+                            aria-describedby="error-con-mensaje"></textarea>
+                        <div class="pie-textarea">
+                            <p id="error-con-mensaje" class="error-campo"></p>
+                            <span id="contador-mensaje" class="contador-caracteres">0 / 300</span>
+                        </div>
+                    </div>
+
+                    <div class="acciones-form">
+                        <button type="submit" class="btn-primario">Enviar mensaje</button>
+                    </div>
+                </form>
             </div>
         </section>
 
@@ -146,6 +203,7 @@
             </div>
             <div class="panel-detalle">
                 <h1>Mensajes enviados</h1>
+                <div id="contenedor-mensajes" class="lista-mantenimientos"></div>
             </div>
         </section>
     </main>
