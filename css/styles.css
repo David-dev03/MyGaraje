@@ -369,6 +369,92 @@ body {
     border-top: 1px solid var(--color-border);
 }
 
+/* Subnavegación de pestañas dentro de Acceso y Contacto */
+.subnav-vista {
+    display: flex;
+    gap: var(--sp-12);
+    margin-bottom: var(--sp-16);
+}
+
+/* Formularios */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-16);
+    margin-top: var(--sp-16);
+}
+
+.campo-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+}
+
+.campo-form label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-on-surface);
+}
+
+.campo-form input[type="text"],
+.campo-form input[type="email"],
+.campo-form input[type="password"],
+.campo-form input[type="date"],
+.campo-form input[type="tel"],
+.campo-form select,
+.campo-form textarea {
+    width: 100%;
+    padding: var(--sp-10) var(--sp-12);
+    border: 1px solid var(--color-border);
+    border-radius: var(--rad-8);
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+}
+
+.campo-form input[aria-invalid="true"],
+.campo-form select[aria-invalid="true"],
+.campo-form textarea[aria-invalid="true"] {
+    border-color: var(--color-error);
+    background-color: #fef2f2;
+}
+
+.campo-check label {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-8);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.error-campo {
+    color: var(--color-error);
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-height: 1.1em;
+}
+
+.acciones-form {
+    display: flex;
+    gap: var(--sp-12);
+    flex-wrap: wrap;
+}
+
+.acciones-form .btn-secundario {
+    margin-bottom: 0;
+}
+
+.acciones-tarjeta {
+    display: flex;
+    gap: var(--sp-8);
+    flex-wrap: wrap;
+}
+
+.acciones-tarjeta .btn-secundario {
+    margin-bottom: 0;
+}
+
 /* Adaptación al Mockup Móvil (< 600px) */
 @media (max-width: 600px) {
     .navbar {

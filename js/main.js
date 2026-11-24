@@ -1,14 +1,63 @@
 import { motos, mantenimientos } from './datos.js';
-import { renderListadoMotos, renderAlertas, renderDetalleMoto } from './ui.js';
-import { obtenerTodos, obtenerPorId, crear } from './almacen.js';
-
+import { renderListadoMotos, renderAlertas, renderDetalleMoto, renderUsuarios } from './ui.js';
+import { obtenerTodos, obtenerPorId, crear, actualizar, borrar } from './almacen.js';
+import {
+    validarObligatorio,
+    validarLongitud,
+    validarEmail,
+    validarPassword,
+    validarRepetirPassword,
+    validarFechaNacimiento
+} from './validacion.js';
 
 const vistaDetalle = document.querySelector('#vista-detalle');
+const tituloGaraje = document.querySelector('#titulo-garaje');
 const contenedorMotos = document.querySelector('#contenedor-motos');
 const contenedorAlertas = document.querySelector('#contenedor-alertas');
-const navLinks = document.querySelector('.nav-links');
 const vistas = document.querySelectorAll('.vista');
 const enlacesNav = document.querySelectorAll('.nav-links a');
+
+const formRegistro = document.querySelector('#form-registro');
+const tituloRegistro = document.querySelector('#titulo-registro');
+const btnGuardarUsuario = document.querySelector('#btn-guardar-usuario');
+const btnCancelarEdicion = document.querySelector('#btn-cancelar-edicion');
+const contenedorUsuarios = document.querySelector('#contenedor-usuarios');
+
+const regNombre = document.querySelector('#reg-nombre');
+const regCorreo = document.querySelector('#reg-correo');
+const regPassword = document.querySelector('#reg-password');
+const regRepetir = document.querySelector('#reg-repetir');
+const regFecha = document.querySelector('#reg-fecha');
+const regCondiciones = document.querySelector('#reg-condiciones');
+
+let idUsuarioEditando = null;
+
+function obtenerIdPerfilActivo() {
+    const guardado = localStorage.getItem('perfilActivoId');
+    if (guardado === null) {
+        return null;
+    }
+    return Number(guardado);
+}
+
+function actualizarTituloPerfil() {
+    const idPerfil = obtenerIdPerfilActivo();
+    if (idPerfil === null) {
+        tituloGaraje.textContent = 'MyGaraje';
+        return;
+    }
+    const usuario = obtenerPorId('usuarios', idPerfil);
+    if (usuario) {
+        tituloGaraje.textContent = 'MyGaraje · Perfil: ' + usuario.nombre;
+    } else {
+        tituloGaraje.textContent = 'MyGaraje';
+    }
+}
+
+function pintarUsuarios() {
+    renderUsuarios(obtenerTodos('usuarios'), contenedorUsuarios, obtenerIdPerfilActivo());
+    actualizarTituloPerfil();
+}
 
 function buscarMotoPorId(idBuscado) {
     return obtenerPorId('motos', idBuscado);
@@ -37,9 +86,16 @@ function mostrarVista(idVista) {
         vistaElegida.classList.remove('oculto');
     }
 
+    let vistaMenu = idVista;
+    if (idVista === 'vista-usuarios') {
+        vistaMenu = 'vista-registro';
+    } else if (idVista === 'vista-mensajes') {
+        vistaMenu = 'vista-contacto';
+    }
+
     for (let i = 0; i < enlacesNav.length; i++) {
         enlacesNav[i].classList.remove('activo');
-        if (enlacesNav[i].dataset.vista === idVista) {
+        if (enlacesNav[i].dataset.vista === vistaMenu) {
             enlacesNav[i].classList.add('activo');
         }
     }
@@ -47,12 +103,12 @@ function mostrarVista(idVista) {
 }
 
 function manejarClicNav(event) {
-    const enlace = event.target.closest('a');
-    if (!enlace || !enlace.dataset.vista) {
+    const boton = event.target.closest('[data-vista]');
+    if (!boton) {
         return;
     }
     event.preventDefault();
-    mostrarVista(enlace.dataset.vista);
+    mostrarVista(boton.dataset.vista);
 }
 
 function mostrarDetalle(motoId) {
@@ -87,6 +143,184 @@ function manejarClicDetalle(event) {
     }
 }
 
+function mostrarErrorCampo(campo, mensaje) {
+    const idError = campo.getAttribute('aria-describedby');
+    const cajaError = document.querySelector('#' + idError);
+
+    if (mensaje) {
+        cajaError.textContent = mensaje;
+        campo.setAttribute('aria-invalid', 'true');
+    } else {
+        cajaError.textContent = '';
+        campo.setAttribute('aria-invalid', 'false');
+    }
+}
+
+function obtenerErrorRegistro(campo) {
+    if (campo.type === 'checkbox') {
+        if (campo.required && !campo.checked) {
+            return 'Debes aceptar las condiciones de uso';
+        }
+        return null;
+    }
+
+    if (campo.required) {
+        const errorObligatorio = validarObligatorio(campo.value);
+        if (errorObligatorio) {
+            return errorObligatorio;
+        }
+    }
+
+    if (campo.id === 'reg-nombre') {
+        const min = campo.minLength > 0 ? campo.minLength : null;
+        const max = campo.maxLength > 0 ? campo.maxLength : null;
+        return validarLongitud(campo.value, min, max);
+    }
+
+    if (campo.id === 'reg-correo') {
+        return validarEmail(campo.value);
+    }
+
+    if (campo.id === 'reg-password') {
+        return validarPassword(campo.value);
+    }
+
+    if (campo.id === 'reg-repetir') {
+        return validarRepetirPassword(campo.value, regPassword.value);
+    }
+
+    if (campo.id === 'reg-fecha') {
+        if (campo.min && campo.value < campo.min) {
+            return 'La fecha no puede ser anterior a ' + campo.min;
+        }
+        return validarFechaNacimiento(campo.value, 16);
+    }
+
+    return null;
+}
+
+function validarCampoRegistro(campo) {
+    const error = obtenerErrorRegistro(campo);
+    mostrarErrorCampo(campo, error);
+    return error === null;
+}
+
+function limpiarFormularioRegistro() {
+    formRegistro.reset();
+    idUsuarioEditando = null;
+    tituloRegistro.textContent = 'Registro de usuario';
+    btnGuardarUsuario.textContent = 'Registrarme';
+    btnCancelarEdicion.classList.add('oculto');
+
+    const campos = [regNombre, regCorreo, regPassword, regRepetir, regFecha, regCondiciones];
+    for (let i = 0; i < campos.length; i++) {
+        delete campos[i].dataset.tocado;
+        mostrarErrorCampo(campos[i], null);
+    }
+}
+
+function manejarBlurRegistro(event) {
+    const campo = event.target;
+    if (!campo.name) {
+        return;
+    }
+    campo.dataset.tocado = 'true';
+    validarCampoRegistro(campo);
+}
+
+function manejarInputRegistro(event) {
+    const campo = event.target;
+    if (!campo.name) {
+        return;
+    }
+    if (campo.dataset.tocado === 'true') {
+        validarCampoRegistro(campo);
+    }
+    if (campo.id === 'reg-password' && regRepetir.dataset.tocado === 'true') {
+        validarCampoRegistro(regRepetir);
+    }
+}
+
+function manejarSubmitRegistro(event) {
+    event.preventDefault();
+
+    const campos = [regNombre, regCorreo, regPassword, regRepetir, regFecha, regCondiciones];
+    let primerCampoConError = null;
+
+    for (let i = 0; i < campos.length; i++) {
+        campos[i].dataset.tocado = 'true';
+        const esValido = validarCampoRegistro(campos[i]);
+        if (!esValido && !primerCampoConError) {
+            primerCampoConError = campos[i];
+        }
+    }
+
+    if (primerCampoConError) {
+        primerCampoConError.focus();
+        return;
+    }
+
+    const datosUsuario = {
+        nombre: regNombre.value.trim(),
+        correo: regCorreo.value.trim(),
+        fechaNacimiento: regFecha.value,
+        condicionesAceptadas: Boolean(regCondiciones.checked)
+    };
+
+    if (idUsuarioEditando !== null) {
+        actualizar('usuarios', idUsuarioEditando, datosUsuario);
+    } else {
+        crear('usuarios', datosUsuario);
+    }
+
+    limpiarFormularioRegistro();
+    pintarUsuarios();
+    mostrarVista('vista-usuarios');
+}
+
+function manejarClicUsuarios(event) {
+    const botonPerfil = event.target.closest('.btn-usar-perfil');
+    if (botonPerfil) {
+        const id = Number(botonPerfil.dataset.id);
+        localStorage.setItem('perfilActivoId', id);
+        pintarUsuarios();
+        return;
+    }
+    const botonBorrar = event.target.closest('.btn-borrar-usuario');
+    if (botonBorrar) {
+        const id = Number(botonBorrar.dataset.id);
+        if (confirm('¿Seguro que quieres borrar este usuario?')) {
+            borrar('usuarios', id);
+            if (obtenerIdPerfilActivo() === id) {
+                localStorage.removeItem('perfilActivoId');
+            }
+            pintarUsuarios();
+        }
+        return;
+    }
+
+    const botonEditar = event.target.closest('.btn-editar-usuario');
+    if (botonEditar) {
+        const id = Number(botonEditar.dataset.id);
+        const usuario = obtenerPorId('usuarios', id);
+        if (!usuario) {
+            return;
+        }
+
+        limpiarFormularioRegistro();
+        idUsuarioEditando = id;
+        regNombre.value = usuario.nombre;
+        regCorreo.value = usuario.correo;
+        regFecha.value = usuario.fechaNacimiento;
+        regCondiciones.checked = Boolean(usuario.condicionesAceptadas);
+
+        tituloRegistro.textContent = 'Editar usuario';
+        btnGuardarUsuario.textContent = 'Guardar cambios';
+        btnCancelarEdicion.classList.remove('oculto');
+        mostrarVista('vista-registro');
+    }
+}
+
 function iniciarApp() {
     function cargarDatosIniciales() {
         if (obtenerTodos('motos').length === 0) {
@@ -113,7 +347,16 @@ function iniciarApp() {
 
     contenedorMotos.addEventListener('click', manejarClicMotos);
     vistaDetalle.addEventListener('click', manejarClicDetalle);
-    navLinks.addEventListener('click', manejarClicNav);
+    document.addEventListener('click', manejarClicNav);
+
+    pintarUsuarios();
+
+    formRegistro.addEventListener('blur', manejarBlurRegistro, true);
+    formRegistro.addEventListener('input', manejarInputRegistro);
+    formRegistro.addEventListener('change', manejarInputRegistro);
+    formRegistro.addEventListener('submit', manejarSubmitRegistro);
+    btnCancelarEdicion.addEventListener('click', limpiarFormularioRegistro);
+    contenedorUsuarios.addEventListener('click', manejarClicUsuarios);
 }
 
 iniciarApp();

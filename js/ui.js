@@ -131,3 +131,37 @@ export function renderDetalleMoto(moto, mantenimientosMoto, contenedor) {
     </div>
   `;
 }
+
+export function renderUsuarios(listaUsuarios, contenedor, idPerfilActivo) {
+  if (listaUsuarios.length === 0) {
+    contenedor.innerHTML = '<p>No hay usuarios registrados todavía.</p>';
+    return;
+  }
+
+  let html = '';
+  for (let i = 0; i < listaUsuarios.length; i++) {
+    const u = listaUsuarios[i];
+    const esActivo = u.id === idPerfilActivo;
+    let etiquetaActivo = '';
+    if (esActivo) {
+      etiquetaActivo = '<span class="badge-estado badge-ok">Perfil activo</span>';
+    }
+
+    html += `
+      <article class="item-mantenimiento">
+        <div class="mantenimiento-cabecera">
+          <h3>${u.nombre} ${etiquetaActivo}</h3>
+          <div class="acciones-tarjeta">
+            <button type="button" class="btn-primario btn-usar-perfil" data-id="${u.id}">Usar perfil</button>
+            <button type="button" class="btn-secundario btn-editar-usuario" data-id="${u.id}">Editar</button>
+            <button type="button" class="btn-secundario btn-borrar-usuario" data-id="${u.id}">Borrar</button>
+          </div>
+        </div>
+        <p><strong>Correo:</strong> ${u.correo}</p>
+        <p><strong>Fecha de nacimiento:</strong> ${u.fechaNacimiento}</p>
+      </article>
+    `;
+  }
+
+  contenedor.innerHTML = html;
+}
