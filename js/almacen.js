@@ -49,3 +49,15 @@ export function borrar(coleccion, id){
     }
     localStorage.setItem(coleccion,JSON.stringify(nuevaLista));
 }
+
+export function obtenerValor(clave){
+    return localStorage.getItem(clave);
+}
+
+export function guardarValor(clave, valor){
+    localStorage.setItem(clave, String(valor));
+}
+
+export function borrarValor(clave){
+    localStorage.removeItem(clave);
+}

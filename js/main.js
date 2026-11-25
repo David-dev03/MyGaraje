@@ -1,6 +1,6 @@
 import { motos, mantenimientos } from './datos.js';
 import { renderListadoMotos, renderAlertas, renderDetalleMoto, renderUsuarios, renderMensajes } from './ui.js';
-import { obtenerTodos, obtenerPorId, crear, actualizar, borrar } from './almacen.js';
+import { obtenerTodos, obtenerPorId, crear, actualizar, borrar, obtenerValor, guardarValor, borrarValor } from './almacen.js';
 import {
     validarObligatorio,
     validarLongitud,
@@ -44,7 +44,7 @@ const contadorMensaje = document.querySelector('#contador-mensaje');
 let idUsuarioEditando = null;
 
 function obtenerIdPerfilActivo() {
-    const guardado = localStorage.getItem('perfilActivoId');
+    const guardado = obtenerValor('perfilActivoId');
     if (guardado === null) {
         return null;
     }
@@ -204,6 +204,9 @@ function obtenerErrorRegistro(campo) {
         if (campo.min && campo.value < campo.min) {
             return 'La fecha no puede ser anterior a ' + campo.min;
         }
+        if (campo.max && campo.value > campo.max) {
+            return 'La fecha no puede ser posterior a ' + campo.max;
+        }
         return validarFechaNacimiento(campo.value, 16);
     }
 
@@ -293,7 +296,7 @@ function manejarClicUsuarios(event) {
     const botonPerfil = event.target.closest('.btn-usar-perfil');
     if (botonPerfil) {
         const id = Number(botonPerfil.dataset.id);
-        localStorage.setItem('perfilActivoId', id);
+        guardarValor('perfilActivoId', id);
         pintarUsuarios();
         return;
     }
@@ -303,7 +306,7 @@ function manejarClicUsuarios(event) {
         if (confirm('¿Seguro que quieres borrar este usuario?')) {
             borrar('usuarios', id);
             if (obtenerIdPerfilActivo() === id) {
-                localStorage.removeItem('perfilActivoId');
+                borrarValor('perfilActivoId');
             }
             pintarUsuarios();
         }
